@@ -15,7 +15,7 @@ import fs from 'mz/fs';
 import path from 'path';
 import * as borsh from 'borsh';
 
-import { getPayer, getRpcUrl, createKeypairFromFile } from './utils';
+import {getPayer, getRpcUrl, createKeypairFromFile} from './utils';
 
 /**
  * Connection to the network
@@ -62,7 +62,9 @@ const PROGRAM_KEYPAIR_PATH = path.join(PROGRAM_PATH, 'helloworld-keypair.json');
 class GreetingAccount {
   counter = 0;
   counter_times_2 = 0;
-  constructor(fields: { counter: number, counter_times_2: number } | undefined = undefined) {
+  constructor(
+    fields: {counter: number; counter_times_2: number} | undefined = undefined,
+  ) {
     if (fields) {
       this.counter = fields.counter;
       this.counter_times_2 = fields.counter_times_2;
@@ -74,7 +76,16 @@ class GreetingAccount {
  * Borsh schema definition for greeting accounts
  */
 const GreetingSchema = new Map([
-  [GreetingAccount, { kind: 'struct', fields: [['counter', 'u32'], ['counter_times_2', 'u32']] }],
+  [
+    GreetingAccount,
+    {
+      kind: 'struct',
+      fields: [
+        ['counter', 'u32'],
+        ['counter_times_2', 'u32'],
+      ],
+    },
+  ],
 ]);
 
 /**
@@ -101,7 +112,7 @@ export async function establishConnection(): Promise<void> {
 export async function establishPayer(): Promise<void> {
   let fees = 0;
   if (!payer) {
-    const { feeCalculator } = await connection.getRecentBlockhash();
+    const {feeCalculator} = await connection.getRecentBlockhash();
 
     // Calculate the cost to fund the greeter account
     fees += await connection.getMinimumBalanceForRentExemption(GREETING_SIZE);
@@ -140,7 +151,7 @@ export async function checkProgram(): Promise<void> {
   try {
     const programKeypair = await createKeypairFromFile(PROGRAM_KEYPAIR_PATH);
     programId = programKeypair.publicKey;
-    console.log(`program_id: ${programId.toBase58()}`)
+    console.log(`program_id: ${programId.toBase58()}`);
   } catch (err) {
     const errMsg = (err as Error).message;
     throw new Error(
@@ -204,7 +215,7 @@ export async function checkProgram(): Promise<void> {
 export async function sayHello(): Promise<void> {
   console.log('Saying hello to', greetedPubkey.toBase58());
   const instruction = new TransactionInstruction({
-    keys: [{ pubkey: greetedPubkey, isSigner: false, isWritable: true }],
+    keys: [{pubkey: greetedPubkey, isSigner: false, isWritable: true}],
     programId,
     data: Buffer.from(new Uint8Array([0, 1, 0, 0, 0, 0, 0, 0, 0])), // first byte gets striped and next 8 get serialized to two u32
   });
@@ -233,6 +244,6 @@ export async function reportGreetings(): Promise<void> {
     'has been greeted',
     greeting.counter,
     'time(s)',
-    greeting.counter_times_2
+    greeting.counter_times_2,
   );
 }
