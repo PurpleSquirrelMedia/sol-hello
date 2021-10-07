@@ -86,4 +86,3 @@ bit is matched to return a corresponding instruction type from the instruction e
   * Determine type of instruction received based on first bit of deserialized data
   * Process instruction based on instruction type<br> it makes sense that many programs separate concerns by having different modules for instructions and processors. Other programs seem to also separate out errors and state. You can look at the [token-lending-program](https://github.com/solana-labs/solana-program-library/tree/master/token-lending/program/src) in the Solana Program Library to see a fully developed program.
 
-  ## Other Things Worth Checking Out
