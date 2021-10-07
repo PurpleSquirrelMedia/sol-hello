@@ -18,6 +18,7 @@ The original project included:
 * A client that can send a "hello" to an account and get back the number of
   times "hello" has been sent
 
+<<<<<<< HEAD
 This extended version adds the following functionality:
 
 * The on-chain program processes serialized input for the number of greetings to
@@ -74,3 +75,4 @@ This extended example accomplishes these objectives. From a relative newcomer to
 6. You interact with on chain programs by sending it [Transactions](src/program-rust/src/instruction.rs), comprised of one or more [Instructions](https://docs.rs/solana-program/1.8.0/solana_program/instruction/struct.Instruction.html). Instructions are just the program that it should be sent to, a list of accounts the instruction and then the data the program needs to process the instruction. Again, that data is just bytes and you have to have set up the serialization on the client side and deserialization on the program side so that they match. This is greatly facilitated by using the same Instruction construct in both client program.
 7. This program only has a single instruction, but you can process different instructions by using the first bit of the Instruction data that gets passed in to identify the instruction type. If you look in [instruction.rs](src/program-rust/src/instruction.rs), you can see that the first
 bit is matched to return a corresponding instruction type from the instruction enum.
+
