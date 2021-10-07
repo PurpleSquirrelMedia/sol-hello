@@ -4,7 +4,7 @@
   </a>
 </p>
 
-[![Gitpod
+[![build status](https://github.com/CalebEverett/example-helloworld/actions/workflows/main.yml/badge.svg)](https://github.com/CalebEverett/example-helloworld/actions/workflows/main.yml)[![Gitpod
 Ready-to-Code](https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/CalebEverett/example-helloworld)
 
 
@@ -18,7 +18,6 @@ The original project included:
 * A client that can send a "hello" to an account and get back the number of
   times "hello" has been sent
 
-<<<<<<< HEAD
 This extended version adds the following functionality:
 
 * The on-chain program processes serialized input for the number of greetings to
@@ -53,26 +52,36 @@ This extended version adds the following functionality:
 ## Motivation
 
 The original [example-helloworld](https://github.com/solana-labs/example-helloworld) project was a great
-starting place. In order to continue the learning progression, I thought it was important to learn how to:
+starting place. This extended example continues the learning with added functionality to:
 
 * Pass data to on chain programs
 * Interact with on chain programs from Rust command line programs
 
-This extended example accomplishes these objectives. From a relative newcomer to Rust and Solana with intermediate Python experience, working through the details of implementing these features helped to better understand how Solana works. [The programming model docs](https://docs.solana.com/developing/programming-model/overview) explain all this more precisely, in more detail, but here is a high level overview.
+As a newcomer to Rust and Solana with intermediate Python experience, working through the details of implementing these features helped to better understand how Solana works. [The programming model docs](https://docs.solana.com/developing/programming-model/overview) explain all this more precisely, in more detail, but here is a high level overview.
 
 1. Programs live on chain, but don't store any data.
+
 2. Data is stored in separate accounts that can be accessed by programs.
+
 3. All data is stored as bytes.
+
 4. The process of turning data that you use in your program into bytes to be
   stored is called serialization. The process of decoding stored bytes into
   data you use in your programs is called deserialization. In super layman's terms
   you basically have a series of 8 bit numbers (up to 255 for each) that get stored in an
   array in storage. The process of serializing and deserializing entails knowing how those bytes
-  relate to the numbers in your program. In this extended example, we store two unsigned 32 bit numbers, which means that we have an array of 8 bits where we have decided in our program that the first four
+  relate to the data in your program. In this extended example, we store two unsigned 32 bit numbers, which means that we have an array of 8 bits where we have decided in our program that the first four
   relate to `counter` and the second four relate to `counter_times_2`. Check out [processors.rs](src/program-rust/src/processor.rs) to see how that works.
+
 5. Same thing as it relates to passing data into your programs. You have to serialize the data that
   you are going to pass in and then add logic to your program to deserialize it. Check out the `sayHello` function in [helloworld.ts](src/client/hello_world.ts) and [instruction.rs](src/program-rust/src/instruction.rs) to see how it works on the client side. Note that that instruction includes serialization and deserialization (packing and unpacking) methods that get used by both the onchain and cli programs.
+
 6. You interact with on chain programs by sending it [Transactions](src/program-rust/src/instruction.rs), comprised of one or more [Instructions](https://docs.rs/solana-program/1.8.0/solana_program/instruction/struct.Instruction.html). Instructions are just the program that it should be sent to, a list of accounts the instruction and then the data the program needs to process the instruction. Again, that data is just bytes and you have to have set up the serialization on the client side and deserialization on the program side so that they match. This is greatly facilitated by using the same Instruction construct in both client program.
+
 7. This program only has a single instruction, but you can process different instructions by using the first bit of the Instruction data that gets passed in to identify the instruction type. If you look in [instruction.rs](src/program-rust/src/instruction.rs), you can see that the first
 bit is matched to return a corresponding instruction type from the instruction enum.
 
+8 . Given the usual flow of a program:
+  * Receive serialized instruction
+  * Determine type of instruction received based on first bit of deserialized data
+  * Process instruction based on instruction type<br> it seems to make sense that many programs separate concerns by having different modules for instructions and processors. Other programs seem to also separate out errors and state. You can look at the [token-lending-program](https://github.com/solana-labs/solana-program-library/tree/master/token-lending/program/src) in the Solana Program Library to see a fully developed program.

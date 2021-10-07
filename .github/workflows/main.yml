@@ -1,4 +1,4 @@
-name: Hello Example
+name: build status
 on:
   push:
     branches:
