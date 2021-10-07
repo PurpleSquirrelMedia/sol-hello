@@ -4,280 +4,73 @@
   </a>
 </p>
 
-[![Build status][travis-image]][travis-url] [![Gitpod
-Ready-to-Code](https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/solana-labs/example-helloworld)
+[![Gitpod
+Ready-to-Code](https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/CalebEverett/example-helloworld)
 
-[travis-image]:
-https://travis-ci.org/solana-labs/example-helloworld.svg?branch=master
-[travis-url]: https://travis-ci.org/solana-labs/example-helloworld
 
-# Hello world on Solana
+# Hello world on Solana - extended
 
-This project demonstrates how to use the [Solana Javascript
-API](https://github.com/solana-labs/solana-web3.js) to
-interact with programs on the Solana blockchain.
+This is an extended version of the official Solana [example-helloworld](https://github.com/solana-labs/example-helloworld) project.
 
-The project comprises of:
+The original project included:
 
 * An on-chain hello world program
 * A client that can send a "hello" to an account and get back the number of
   times "hello" has been sent
 
-## Translations
-- [Traditional Chinese](README_ZH_TW.md)
-- [Simplified Chinese](README_ZH_CN.md)
-
-## Table of Contents
-- [Hello world on Solana](#hello-world-on-solana)
-  - [Table of Contents](#table-of-contents)
-  - [Quick Start](#quick-start)
-    - [Configure CLI](#configure-cli)
-    - [Start local Solana cluster](#start-local-solana-cluster)
-    - [Install npm dependencies](#install-npm-dependencies)
-    - [Build the on-chain program](#build-the-on-chain-program)
-    - [Deploy the on-chain program](#deploy-the-on-chain-program)
-    - [Run the JavaScript client](#run-the-javascript-client)
-    - [Expected output](#expected-output)
-      - [Not seeing the expected output?](#not-seeing-the-expected-output)
-    - [Customizing the Program](#customizing-the-program)
-  - [Learn about Solana](#learn-about-solana)
-  - [Learn about the client](#learn-about-the-client)
-    - [Entrypoint](#entrypoint)
-    - [Establish a connection to the cluster](#establish-a-connection-to-the-cluster)
-    - [Load the helloworld on-chain program if not already loaded](#load-the-helloworld-on-chain-program-if-not-already-loaded)
-    - [Send a "Hello" transaction to the on-chain program](#send-a-hello-transaction-to-the-on-chain-program)
-    - [Query the Solana account used in the "Hello" transaction](#query-the-solana-account-used-in-the-hello-transaction)
-  - [Learn about the on-chain program](#learn-about-the-on-chain-program)
-    - [Programming on Solana](#programming-on-Solana)
-  - [Pointing to a public Solana cluster](#pointing-to-a-public-solana-cluster)
-  - [Expand your skills with advanced examples](#expand-your-skills-with-advanced-examples)
-
-## Quick Start
-
-[![Open in
-Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/solana-labs/example-helloworld)
-
-If you decide to open in Gitpod then refer to
-[README-gitpod.md](README-gitpod.md), otherwise continue reading.
-
-The following dependencies are required to build and run this example, depending
-on your OS, they may already be installed:
-
-- Install node (v14 recommended)
-- Install npm
-- Install the latest Rust stable from https://rustup.rs/
-- Install Solana v1.7.11 or later from
-  https://docs.solana.com/cli/install-solana-cli-tools
-
-If this is your first time using Rust, these [Installation
-Notes](README-installation-notes.md) might be helpful.
-
-### Configure CLI
-
-> If you're on Windows, it is recommended to use [WSL](https://docs.microsoft.com/en-us/windows/wsl/install-win10) to run these commands
-
-1. Set CLI config url to localhost cluster
-
-```bash
-solana config set --url localhost
-```
-
-2. Create CLI Keypair
-
-If this is your first time using the Solana CLI, you will need to generate a new keypair:
-
-```bash
-solana-keygen new
-```
-
-### Start local Solana cluster
-
-This example connects to a local Solana cluster by default.
-
-Start a local Solana cluster:
-```bash
-solana-test-validator
-```
-> **Note**: You may need to do some [system tuning](https://docs.solana.com/running-validator/validator-start#system-tuning) (and restart your computer) to get the validator to run
-
-Listen to transaction logs:
-```bash
-solana logs
-```
-
-### Install npm dependencies
-
-```bash
-npm install
-```
-
-### Build the on-chain program
-
-There is both a Rust and C version of the on-chain program, whichever is built
-last will be the one used when running the example.
-
-```bash
-npm run build:program-rust
-```
-
-```bash
-npm run build:program-c
-```
-
-### Deploy the on-chain program
-
-```bash
-solana program deploy dist/program/helloworld.so
-```
-
-### Run the JavaScript client
-
-```bash
-npm run start
-```
-
-### Expected output
-
-Public key values will differ:
-
-```bash
-Let's say hello to a Solana account...
-Connection to cluster established: http://localhost:8899 { 'feature-set': 2045430982, 'solana-core': '1.7.8' }
-Using account AiT1QgeYaK86Lf9kudqKthQPCWwpG8vFA1bAAioBoF4X containing 0.00141872 SOL to pay for fees
-Using program Dro9uk45fxMcKWGb1eWALujbTssh6DW8mb4x8x3Eq5h6
-Creating account 8MBmHtJvxpKdYhdw6yPpedp6X6y2U9dCpdYaZJdmwV3A to say hello to
-Saying hello to 8MBmHtJvxpKdYhdw6yPpedp6X6y2U9dCpdYaZJdmwV3A
-8MBmHtJvxpKdYhdw6yPpedp6X6y2U9dCpdYaZJdmwV3A has been greeted 1 times
-Success
-```
-
-#### Not seeing the expected output?
-
-- Ensure you've [started the local cluster](#start-local-solana-cluster),
-  [built the on-chain program](#build-the-on-chain-program) and [deployed the program to the cluster](#deploy-the-on-chain-program).
-- Inspect the program logs by running `solana logs` to see why the program failed.
-  - ```bash
-    Transaction executed in slot 5621:
-    Signature: 4pya5iyvNfAZj9sVWHzByrxdKB84uA5sCxLceBwr9UyuETX2QwnKg56MgBKWSM4breVRzHmpb1EZQXFPPmJnEtsJ
-    Status: Error processing Instruction 0: Program failed to complete
-    Log Messages:
-      Program G5bbS1ipWzqQhekkiCLn6u7Y1jJdnGK85ceSYLx2kKbA invoke [1]
-      Program log: Hello World Rust program entrypoint
-      Program G5bbS1ipWzqQhekkiCLn6u7Y1jJdnGK85ceSYLx2kKbA consumed 200000 of 200000 compute units
-      Program failed to complete: exceeded maximum number of instructions allowed (200000) at instruction #334
-      Program G5bbS1ipWzqQhekkiCLn6u7Y1jJdnGK85ceSYLx2kKbA failed: Program failed to complete
-
-### Customizing the Program
-
-To customize the example, make changes to the files under `/src`.  If you change
-any files under `/src/program-rust` or `/src/program-c` you will need to
-[rebuild the on-chain program](#build-the-on-chain-program) and [redeploy the program](#deploy-the-on-chain-program).
-
-Now when you rerun `npm run start`, you should see the results of your changes.
-
-## Learn about Solana
-
-More information about how Solana works is available in the [Solana
-documentation](https://docs.solana.com/) and all the source code is available on
-[github](https://github.com/solana-labs/solana)
-
-Further questions? Visit us on [Discord](https://discordapp.com/invite/pquxPsq)
-
-## Learn about the client
-
-The client in this example is written in TypeScript using:
-- [Solana web3.js SDK](https://github.com/solana-labs/solana-web3.js)
-- [Solana web3 API](https://solana-labs.github.io/solana-web3.js)
-
-### Entrypoint
-
-The [client's
-entrypoint](https://github.com/solana-labs/example-helloworld/blob/ad52dc719cdc96d45ad8e308e8759abf4792b667/src/client/main.ts#L13)
-does five things.
-
-### Establish a connection to the cluster
-
-The client establishes a connection with the cluster by calling
-[`establishConnection`](https://github.com/solana-labs/example-helloworld/blob/ad52dc719cdc96d45ad8e308e8759abf4792b667/src/client/hello_world.ts#L92).
-
-### Establish an account to pay for transactions
-
-The client ensures there is an account available to pay for transactions,
-and creates one if there is not, by calling
-[`establishPayer`](https://github.com/solana-labs/example-helloworld/blob/ad52dc719cdc96d45ad8e308e8759abf4792b667/src/client/hello_world.ts#L102).
-
-### Check if the helloworld on-chain program has been deployed
-
-In [`checkProgram`](https://github.com/solana-labs/example-helloworld/blob/ad52dc719cdc96d45ad8e308e8759abf4792b667/src/client/hello_world.ts#L144),
-the client loads the keypair of the deployed program from `./dist/program/helloworld-keypair.json` and uses
-the public key for the keypair to fetch the program account. If the program doesn't exist, the client halts
-with an error. If the program does exist, it will create a new account with the program assigned as its owner
-to store program state (number of hello's processed).
-
-### Send a "Hello" transaction to the on-chain program
-
-The client then constructs and sends a "Hello" transaction to the program by
-calling
-[`sayHello`](https://github.com/solana-labs/example-helloworld/blob/ad52dc719cdc96d45ad8e308e8759abf4792b667/src/client/hello_world.ts#L209).
-The transaction contains a single very simple instruction that primarily carries
-the public key of the helloworld program account to call and the "greeter"
-account to which the client wishes to say "Hello" to.
-
-### Query the Solana account used in the "Hello" transaction
-
-Each time the client says "Hello" to an account, the program increments a
-numerical count in the "greeter" account's data.  The client queries the
-"greeter" account's data to discover the current number of times the account has
-been greeted by calling
-[`reportGreetings`](https://github.com/solana-labs/example-helloworld/blob/ad52dc719cdc96d45ad8e308e8759abf4792b667/src/client/hello_world.ts#L226).
-
-## Learn about the on-chain program
-
-The [on-chain helloworld program](/src/program-rust/Cargo.toml) is a Rust program
-compiled to [Berkley Packet Format
-(BPF)](https://en.wikipedia.org/wiki/Berkeley_Packet_Filter) and stored as an
-[Executable and Linkable Format (ELF) shared
-object](https://en.wikipedia.org/wiki/Executable_and_Linkable_Format).
-
-The program is written using:
-- [Solana Rust SDK](https://github.com/solana-labs/solana/tree/master/sdk)
-
-### Programming on Solana
-
-To learn more about Solana programming model refer to the [Programming Model
-Overview](https://docs.solana.com/developing/programming-model/overview).
-
-To learn more about developing programs on Solana refer to the [On-Chain 
-Programs Overview](https://docs.solana.com/developing/on-chain-programs/overview)
-
-## Pointing to a public Solana cluster
-
-Solana maintains three public clusters:
-- `devnet` - Development cluster with airdrops enabled
-- `testnet` - Tour De Sol test cluster without airdrops enabled
-- `mainnet-beta` -  Main cluster
-
-Use the Solana CLI to configure which cluster to connect to.
-
-To point to `devnet`:
-```bash
-solana config set --url devnet
-```
-
-To point back to the local cluster:
-```bash
-solana config set --url localhost
-```
-
-## Expand your skills with advanced examples
-
-There is lots more to learn; The following examples demonstrate more advanced
-features like custom errors, advanced account handling, suggestions for data
-serialization, benchmarking, etc...
-
-- [Programming
-  Examples](https://github.com/solana-labs/solana-program-library/tree/master/examples)
-- [Token
-  Program](https://github.com/solana-labs/solana-program-library/tree/master/token)
-- [Token Swap
-  Program](https://github.com/solana-labs/solana-program-library/tree/master/token-swap)
+This extended version adds the following functionality:
+
+* The on-chain program processes serialized input for the number of greetings to
+  add to the counter.
+* The on chain program adds another field to the Greeting Account, which trivially
+  stores the result of 2 * the original counter field
+* The javascript client serializes and sends a set number to be processed by the on
+  chain program
+* Includes a rust based command line program to interact with the on chain program, including
+  * Creating a greeting account of the appropriate size - to accommodate both fields (counter and counter_times _2)
+  * Accepts an argument for the number of greetings to send
+
+## Getting Started
+
+1. Follow the instructions in original [README.md](README_original.md) to
+
+  * Install Node, Rust and Solana installed
+  * Install node dependencies
+  * Start the local test validator and Solana logs
+  * Build and deploy the on chain program
+  
+2. At this point you you should be able to run the javascript client with `npm run start` and
+    see that a greeting account has been created on chain and that the number of greetings 
+    has been incremented
+
+3. To interact with the Rust cli program, first build it with `npm run build:cli-rust`
+
+4. Then change into the `src/cli-rust` directory and run `cargo run -- --help` to see the
+    the available command line arguments. To increment by one, you can run `cargo run`.
+
+
+## Motivation
+
+The original [example-helloworld](https://github.com/solana-labs/example-helloworld) project was a great
+starting place. In order to continue the learning progression, I thought it was important to learn how to:
+
+* Pass data to on chain programs
+* Interact with on chain programs from Rust command line programs
+
+This extended example accomplishes these objectives. From a relative newcomer to Rust and Solana with intermediate Python experience, working through the details of implementing these features helped to better understand how Solana works. [The programming model docs](https://docs.solana.com/developing/programming-model/overview) explain all this more precisely, in more detail, but here is a high level overview.
+
+1. Programs live on chain, but don't store any data.
+2. Data is stored in separate accounts that can be accessed by programs.
+3. All data is stored as bytes.
+4. The process of turning data that you use in your program into bytes to be
+  stored is called serialization. The process of decoding stored bytes into
+  data you use in your programs is called deserialization. In super layman's terms
+  you basically have a series of 8 bit numbers (up to 255 for each) that get stored in an
+  array in storage. The process of serializing and deserializing entails knowing how those bytes
+  relate to the numbers in your program. In this extended example, we store two unsigned 32 bit numbers, which means that we have an array of 8 bits where we have decided in our program that the first four
+  relate to `counter` and the second four relate to `counter_times_2`. Check out [processors.rs](src/program-rust/src/processor.rs) to see how that works.
+5. Same thing as it relates to passing data into your programs. You have to serialize the data that
+  you are going to pass in and then add logic to your program to deserialize it. Check out the `sayHello` function in [helloworld.ts](src/client/hello_world.ts) and [instruction.rs](src/program-rust/src/instruction.rs) to see how it works on the client side. Note that that instruction includes serialization and deserialization (packing and unpacking) methods that get used by both the onchain and cli programs.
+6. You interact with on chain programs by sending it [Transactions](src/program-rust/src/instruction.rs), comprised of one or more [Instructions](https://docs.rs/solana-program/1.8.0/solana_program/instruction/struct.Instruction.html). Instructions are just the program that it should be sent to, a list of accounts the instruction and then the data the program needs to process the instruction. Again, that data is just bytes and you have to have set up the serialization on the client side and deserialization on the program side so that they match. This is greatly facilitated by using the same Instruction construct in both client program.
+7. This program only has a single instruction, but you can process different instructions by using the first bit of the Instruction data that gets passed in to identify the instruction type. If you look in [instruction.rs](src/program-rust/src/instruction.rs), you can see that the first
+bit is matched to return a corresponding instruction type from the instruction enum.

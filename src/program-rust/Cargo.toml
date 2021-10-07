@@ -13,13 +13,15 @@ edition = "2018"
 no-entrypoint = []
 
 [dependencies]
+arrayref = "0.3.6"
 borsh = "0.9.1"
 borsh-derive = "0.9.1"
-solana-program = "=1.7.9"
+solana-program = "=1.7.11"
+thiserror = "1.0.29"
 
 [dev-dependencies]
-solana-program-test = "=1.7.9"
-solana-sdk = "=1.7.9"
+solana-program-test = "=1.7.11"
+solana-sdk = "=1.7.11"
 
 [lib]
 name = "helloworld"

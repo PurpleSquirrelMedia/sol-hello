@@ -1,5 +1,5 @@
 use borsh::BorshDeserialize;
-use helloworld::{process_instruction, GreetingAccount};
+use helloworld::{process_instruction, processor::GreetingAccount};
 use solana_program_test::*;
 use solana_sdk::{
     account::Account,
@@ -24,7 +24,7 @@ async fn test_helloworld() {
         greeted_pubkey,
         Account {
             lamports: 5,
-            data: vec![0_u8; mem::size_of::<u32>()],
+            data: vec![0_u8; mem::size_of::<u32>() * 2],
             owner: program_id,
             ..Account::default()
         },
@@ -44,11 +44,14 @@ async fn test_helloworld() {
         0
     );
 
+    let mut instruction_data: Vec<u8> = vec![0, 1];
+    let mut num_greetings: Vec<u8> = vec![0; 31];
+    instruction_data.append(&mut num_greetings);
     // Greet once
     let mut transaction = Transaction::new_with_payer(
-        &[Instruction::new_with_bincode(
+        &[Instruction::new_with_bytes(
             program_id,
-            &[0], // ignored but makes the instruction unique in the slot
+            &instruction_data,
             vec![AccountMeta::new(greeted_pubkey, false)],
         )],
         Some(&payer.pubkey()),
@@ -69,11 +72,15 @@ async fn test_helloworld() {
         1
     );
 
+    // need new data to make sure instructions are unique in slot
+    let mut instruction_data: Vec<u8> = vec![0, 2];
+    let mut num_greetings: Vec<u8> = vec![0; 31];
+    instruction_data.append(&mut num_greetings);
     // Greet again
     let mut transaction = Transaction::new_with_payer(
-        &[Instruction::new_with_bincode(
+        &[Instruction::new_with_bytes(
             program_id,
-            &[1], // ignored but makes the instruction unique in the slot
+            &instruction_data,
             vec![AccountMeta::new(greeted_pubkey, false)],
         )],
         Some(&payer.pubkey()),
@@ -91,6 +98,6 @@ async fn test_helloworld() {
         GreetingAccount::try_from_slice(&greeted_account.data)
             .unwrap()
             .counter,
-        2
+        3
     );
 }
