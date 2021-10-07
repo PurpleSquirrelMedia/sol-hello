@@ -14,7 +14,6 @@ import {
 import fs from 'mz/fs';
 import path from 'path';
 import * as borsh from 'borsh';
-const BN = require('bn.js');
 
 import { getPayer, getRpcUrl, createKeypairFromFile } from './utils';
 
@@ -141,7 +140,7 @@ export async function checkProgram(): Promise<void> {
   try {
     const programKeypair = await createKeypairFromFile(PROGRAM_KEYPAIR_PATH);
     programId = programKeypair.publicKey;
-    console.log(`program_id: ${programId}`)
+    console.log(`program_id: ${programId.toBase58()}`)
   } catch (err) {
     const errMsg = (err as Error).message;
     throw new Error(
