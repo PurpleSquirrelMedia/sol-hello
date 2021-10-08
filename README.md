@@ -49,7 +49,7 @@ This extended version adds the following functionality:
     the available command line arguments. To increment by one, you can run `cargo run`.
 
 
-## Motivation
+## Overview
 
 The original [example-helloworld](https://github.com/solana-labs/example-helloworld) project was a great
 starting place. This extended example continues the learning with added functionality to:
@@ -70,7 +70,7 @@ As a newcomer to Rust and Solana with intermediate Python experience, working th
   data you use in your programs is called deserialization. In super layman's terms
   you basically have a series of 8 bit numbers (up to 255 for each) that get stored in an
   array in storage. The process of serializing and deserializing entails knowing how those bytes
-  relate to the data in your program. In this extended example, we store two unsigned 32 bit numbers, which means that we have an array of 8 bits where we have decided in our program that the first four
+  relate to the data in your program. In this extended example, we store two unsigned 32 bit numbers, which means that we have an array of 8 bytes where we have decided in our program that the first four
   relate to `counter` and the second four relate to `counter_times_2`. Check out [processors.rs](src/program-rust/src/processor.rs) to see how that works.
 
 5. Same thing as it relates to passing data into your programs. You have to serialize the data that
@@ -78,11 +78,13 @@ As a newcomer to Rust and Solana with intermediate Python experience, working th
 
 6. You interact with on chain programs by sending it [Transactions](src/program-rust/src/instruction.rs), comprised of one or more [Instructions](https://docs.rs/solana-program/1.8.0/solana_program/instruction/struct.Instruction.html). Instructions are just the program that it should be sent to, a list of accounts the program uses when it processes the instruction and then the data the program needs to process the instruction. Again, that data is just bytes and you have to have set up the serialization on the client side and deserialization on the program side so that they match. This is greatly facilitated by using the same Instruction construct in both the client and onchain programs.
 
-7. This program only has a single instruction, but you can process different instructions by using the first bit of the Instruction data that gets passed in to identify the instruction type. If you look in [instruction.rs](src/program-rust/src/instruction.rs), you can see that the first
-bit is matched to return a corresponding instruction type from the instruction enum.
+7. This program only has a single instruction, but you can process different instructions by using the first byte of the Instruction data that gets passed in to identify the instruction type. If you look in [instruction.rs](src/program-rust/src/instruction.rs), you can see that the first
+byte is matched to zero to return the corresponding instruction type from the instruction enum.
 
-8 . Given the flow of a program:
-  * Receive serialized instruction
-  * Determine type of instruction received based on first bit of deserialized data
-  * Process instruction based on instruction type<br> it makes sense that many programs separate concerns by having different modules for instructions and processors. Other programs seem to also separate out errors and state. You can look at the [token-lending-program](https://github.com/solana-labs/solana-program-library/tree/master/token-lending/program/src) in the Solana Program Library to see a fully developed program.
+8. Given the typical flow of a program it makes sense that concerns get separated by having different modules for instructions and processors. Programs usually separate out errors and state as well. You can look at the [token-lending-program](https://github.com/solana-labs/solana-program-library/tree/master/token-lending/program/src) in the Solana Program Library to see a fully developed program.
+
+
+
+    
+        
 
