@@ -40,7 +40,7 @@ jobs:
           npm run build:cli-rust
           cargo test-bpf --manifest-path=./src/program-rust/Cargo.toml
           solana config set --url localhost
-          npm run deploy::program-rust
+          npm run deploy:program-rust
           npm run start
           cd src/cli-rust
           cargo run
