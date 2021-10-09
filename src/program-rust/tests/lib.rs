@@ -1,5 +1,5 @@
-use borsh::BorshDeserialize;
-use helloworld::{process_instruction, processor::GreetingAccount};
+use borsh::{BorshDeserialize, BorshSerialize};
+use helloworld::{process_instruction, processor::GreetingAccount,instruction::{GreetingInstruction,InitGreetingArgs}};
 use solana_program_test::*;
 use solana_sdk::{
     account::Account,
@@ -44,9 +44,13 @@ async fn test_helloworld() {
         0
     );
 
-    let mut instruction_data: Vec<u8> = vec![0, 1];
-    let mut num_greetings: Vec<u8> = vec![0; 31];
-    instruction_data.append(&mut num_greetings);
+    let instruction_data = GreetingInstruction::InitGreeting(InitGreetingArgs {
+        num_greetings: 1,
+        greeting_string: String::from("hello"),
+    })
+    .try_to_vec()
+    .unwrap();
+    
     // Greet once
     let mut transaction = Transaction::new_with_payer(
         &[Instruction::new_with_bytes(
@@ -73,9 +77,12 @@ async fn test_helloworld() {
     );
 
     // need new data to make sure instructions are unique in slot
-    let mut instruction_data: Vec<u8> = vec![0, 2];
-    let mut num_greetings: Vec<u8> = vec![0; 31];
-    instruction_data.append(&mut num_greetings);
+    let instruction_data = GreetingInstruction::InitGreeting(InitGreetingArgs {
+        num_greetings: 2,
+        greeting_string: String::from("hello"),
+    })
+    .try_to_vec()
+    .unwrap();
     // Greet again
     let mut transaction = Transaction::new_with_payer(
         &[Instruction::new_with_bytes(

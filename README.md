@@ -71,7 +71,7 @@ As a newcomer to Rust and Solana with intermediate Python experience, working th
   you basically have a series of 8 bit numbers (up to 255 for each) that get stored in an
   array in storage. The process of serializing and deserializing entails knowing how those bytes
   relate to the data in your program. In this extended example, we store two unsigned 32 bit numbers, which means that we have an array of 8 bytes where we have decided in our program that the first four
-  relate to `counter` and the second four relate to `counter_times_2`. Check out [processors.rs](src/program-rust/src/processor.rs) to see how that works.
+  relate to `counter` and the second four relate to `counter_times_2`. Check out [processors.rs](src/program-rust/src/processor.rs) to see how that works. I changed this in favor of using `[repr(C)]` decorated structs for the arguments for the instructions which enables borsh to serialize and deserialize, adding variants and handling strings without boilerplate to reference specific ranges in the data array.
 
 5. Same thing as it relates to passing data into your programs. You have to serialize the data that
   you are going to pass in and then add logic to your program to deserialize it. Check out the `sayHello` function in [helloworld.ts](src/client/hello_world.ts) and [instruction.rs](src/program-rust/src/instruction.rs) to see how it works on the client side. Note that that instruction includes serialization and deserialization (packing and unpacking) methods that get used by both the onchain and Rust cli programs.
@@ -84,7 +84,16 @@ byte is matched to zero to return the corresponding instruction type from the in
 8. Given the typical flow of a program it makes sense that concerns get separated by having different modules for instructions and processors. Programs usually separate out errors and state as well. You can look at the [token-lending-program](https://github.com/solana-labs/solana-program-library/tree/master/token-lending/program/src) in the Solana Program Library to see a fully developed program.
 
 
+## Other Notes
+* So11111111111111111111111111111111111111112 is the native token mint account
+* Apparently you can avoid having to specify the references to the locations in the arrays of bytes for serializing and deserializing if you decorate your structs with the `[repr(C)]`
+  * [Type Layout](https://doc.rust-lang.org/stable/reference/type-layout.html)
+  * See implementation in [metaplex repo](https://github.com/metaplex-foundation/metaplex/blob/f6e6a7b7767f18824950326fba20b59872f2a2e2/rust/token-metadata/program/src/processor.rs#L45) where instruction is being matched just by calling `try_from_slice` with all of the enum values decorated with `[repr(C)]`
+  * I'm not sure whether this is considered best practice or if it's better to be more explicit. The code in the [solana token program](https://github.com/solana-labs/solana-program-library/blob/4a45f4a896d4a9616f1a646e44d81c7eb1851b03/token/program/src/processor.rs#L730) is very well developed and it uses the more explicit packing and unpacking.
+* As you are navigating back and forth between the program directories, it can be useful to use the npm scripts to build and deploy
+  * `npm run build:program-rust`
+  * `npm run deploy:program-rust`
+  * `npm run build:cli-rust`
 
-    
         
 

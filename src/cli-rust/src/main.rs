@@ -71,13 +71,21 @@ fn main() -> CommandResult {
         .arg(
             Arg::with_name("greetings")
                 .long("greetings")
-                .short("g")
                 .validator(is_amount)
                 .value_name("GREETINGS")
                 .takes_value(true)
                 .required(false)
                 .default_value("1")
                 .help("number of greetings to increment"),
+        )
+        .arg(
+            Arg::with_name("greeting_string")
+                .long("greeting_string")
+                .value_name("GREETING_STRING")
+                .takes_value(true)
+                .required(false)
+                .default_value("hello")
+                .help("Extra greeting string to pass"),
         )
         .arg(
             Arg::with_name("dry_run")
@@ -123,6 +131,8 @@ fn main() -> CommandResult {
     };
     // Parse inputs from arguments
     let num_greetings: u32 = value_of(&matches, "greetings").unwrap();
+    let greeting_string = String::from(matches.value_of("greeting_string").unwrap());
+
     let greeting_account_seed = matches.value_of("greeting_account_seed").unwrap();
 
     let greeting_account_id = Pubkey::create_with_seed(
@@ -170,6 +180,7 @@ fn main() -> CommandResult {
             config.program_id,
             greeting_account_id,
             num_greetings,
+            greeting_string,
         )],
         Some(&config.fee_payer.pubkey()),
     );
