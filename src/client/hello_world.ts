@@ -15,7 +15,7 @@ import fs from 'mz/fs';
 import path from 'path';
 import * as borsh from 'borsh';
 
-import { getPayer, getRpcUrl, createKeypairFromFile } from './utils';
+import {getPayer, getRpcUrl, createKeypairFromFile} from './utils';
 
 /**
  * Connection to the network
@@ -63,7 +63,7 @@ class GreetingAccount {
   counter = 0;
   counter_times_2 = 0;
   constructor(
-    fields: { counter: number; counter_times_2: number } | undefined = undefined,
+    fields: {counter: number; counter_times_2: number} | undefined = undefined,
   ) {
     if (fields) {
       this.counter = fields.counter;
@@ -112,7 +112,7 @@ export async function establishConnection(): Promise<void> {
 export async function establishPayer(): Promise<void> {
   let fees = 0;
   if (!payer) {
-    const { feeCalculator } = await connection.getRecentBlockhash();
+    const {feeCalculator} = await connection.getRecentBlockhash();
 
     // Calculate the cost to fund the greeter account
     fees += await connection.getMinimumBalanceForRentExemption(GREETING_SIZE);
@@ -215,13 +215,15 @@ export async function checkProgram(): Promise<void> {
 export async function sayHello(): Promise<void> {
   console.log('Saying hello to', greetedPubkey.toBase58());
   const instruction = new TransactionInstruction({
-    keys: [{ pubkey: greetedPubkey, isSigner: false, isWritable: true }],
+    keys: [{pubkey: greetedPubkey, isSigner: false, isWritable: true}],
     programId,
     // First byte is variant of GreetingInstruction enum in on chain program
     // Next four bytes are number one get deserialized to num_greetings on GreetingInstruction struct
-    // Remaining bytes are the serialized string "hello" where the first four bytes are the 
+    // Remaining bytes are the serialized string "hello" where the first four bytes are the
     // length of the string and the remaining bytes are the utf-8 characters.
-    data: Buffer.from(new Uint8Array([0, 1, 0, 0, 0, 5, 0, 0, 0, 104, 101, 108, 108, 111])),
+    data: Buffer.from(
+      new Uint8Array([0, 1, 0, 0, 0, 5, 0, 0, 0, 104, 101, 108, 108, 111]),
+    ),
   });
   await sendAndConfirmTransaction(
     connection,
