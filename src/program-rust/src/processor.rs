@@ -1,11 +1,13 @@
 use crate::error::GreetingError::InvalidInstruction;
 use crate::instruction::GreetingInstruction;
+use arrayref::*;
 use borsh::{BorshDeserialize, BorshSerialize};
 use solana_program::{
     account_info::{next_account_info, AccountInfo},
     entrypoint::ProgramResult,
     msg,
     program_error::ProgramError,
+    program_pack::Pack,
     program_pack::{IsInitialized, Sealed},
     pubkey::Pubkey,
 };
@@ -29,30 +31,29 @@ impl IsInitialized for GreetingAccount {
 // Leaving this here for reference as an alternative method for matching
 // instructions. This method matches based on the first byte of the data
 // and then parses the remaining bytes based on explicit references.
-//
-// const GREETING_ACCOUNT_LEN: usize = 8; // 4 + 4
-// impl Pack for GreetingAccount {
-//     const LEN: usize = GREETING_ACCOUNT_LEN;
+const GREETING_ACCOUNT_LEN: usize = 8; // 4 + 4
+impl Pack for GreetingAccount {
+    const LEN: usize = GREETING_ACCOUNT_LEN;
 
-//     fn pack_into_slice(&self, output: &mut [u8]) {
-//         let output = array_mut_ref![output, 0, GREETING_ACCOUNT_LEN];
-//         let (counter, counter_times_2) = mut_array_refs![output, 4, 4];
+    fn pack_into_slice(&self, output: &mut [u8]) {
+        let output = array_mut_ref![output, 0, GREETING_ACCOUNT_LEN];
+        let (counter, counter_times_2) = mut_array_refs![output, 4, 4];
 
-//         *counter = self.counter.to_le_bytes();
-//         *counter_times_2 = self.counter_times_2.to_le_bytes();
-//     }
+        *counter = self.counter.to_le_bytes();
+        *counter_times_2 = self.counter_times_2.to_le_bytes();
+    }
 
-//     /// Unpacks a byte buffer into a GreetingAccount
-//     fn unpack_from_slice(input: &[u8]) -> Result<Self, ProgramError> {
-//         let input = array_ref![input, 0, GREETING_ACCOUNT_LEN];
-//         let (counter, counter_times_2) = array_refs![input, 4, 4];
+    /// Unpacks a byte buffer into a GreetingAccount
+    fn unpack_from_slice(input: &[u8]) -> Result<Self, ProgramError> {
+        let input = array_ref![input, 0, GREETING_ACCOUNT_LEN];
+        let (counter, counter_times_2) = array_refs![input, 4, 4];
 
-//         Ok(Self {
-//             counter: u32::from_le_bytes(*counter),
-//             counter_times_2: u32::from_le_bytes(*counter_times_2),
-//         })
-//     }
-// }
+        Ok(Self {
+            counter: u32::from_le_bytes(*counter),
+            counter_times_2: u32::from_le_bytes(*counter_times_2),
+        })
+    }
+}
 
 pub struct Processor;
 impl Processor {
