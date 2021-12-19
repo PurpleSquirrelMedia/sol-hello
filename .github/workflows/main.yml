@@ -30,6 +30,7 @@ jobs:
           sudo apt-get install -y libssl-dev --allow-unauthenticated
           sudo apt-get install -y clang-7 --allow-unauthenticated
           sudo apt-get install -y libssl1.1 --allow-unauthenticated
+          sudo apt-get install -y libudev-dev --allow-unauthenticated
           clang-7 --version
           npm install node
           node --version
