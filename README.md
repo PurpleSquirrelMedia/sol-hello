@@ -4,7 +4,7 @@
   </a>
 </p>
 
-[![build status](https://github.com/CalebEverett/example-helloworld/actions/workflows/main.yml/badge.svg)](https://github.com/CalebEverett/example-helloworld/actions/workflows/main.yml)[![Gitpod
+[![build status](https://github.com/CalebEverett/metaplex/actions/workflows/rust-cli.yml/badge.svg)](https://github.com/CalebEverett/metaplex/actions/workflows/rust-cli.yml)[![Gitpod
 Ready-to-Code](https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/CalebEverett/example-helloworld)
 
 
@@ -95,5 +95,8 @@ byte is matched to zero to return the corresponding instruction type from the in
   * `npm run deploy:program-rust`
   * `npm run build:cli-rust`
 
+## Learning Resources
+
+* [UPenn CIS198](https://www.cis.upenn.edu/~cis198/)
         
 
